@@ -1,0 +1,12 @@
+FROM python:3.5
+MAINTAINER Ivan Mesic <ivan.mesic@simplesource.hr>
+
+ENV PYTHONUNBUFFERED 1
+
+EXPOSE 8081
+
+RUN apt-get -qq update && apt-get -y -qq install netcat
+COPY ./services /harpc/services
+RUN pip3 install -r /harpc/services/requirements.txt
+
+WORKDIR /harpc/services
