@@ -17,14 +17,14 @@ storage_account:
 
 service_account:
   image: navi7/harpc
-  ports:
-    - "8081:8081"
   links:
     - "rpc_queue"
     - "storage_account"
   labels:
     - "description=User accounts"
-  command: "/harpc/services/start_service.sh account rpc_queue 5672"
+  command: "/harpc/start_service.sh account rpc_queue 5672"
+  environment:
+    - RPC_QUEUE=amqp://guest:guest@rpc_queue:5672/
 
 
 # products
@@ -38,16 +38,18 @@ storage_product:
 
 service_product:
   image: navi7/harpc
-  ports:
-    - "8082:8081"
   links:
     - "rpc_queue"
     - "storage_product"
   labels:
     - "description=Product definitions and quantities"
-  # volumes:
-  #   - .:/harpc
-  command: "/harpc/services/start_service.sh product rpc_queue 5672"
+  volumes:
+     - ./harpc:/harpc
+  command: "/harpc/start_service.sh product rpc_queue 5672"
+#  command: "tail -f /dev/null"
+  environment:
+    - RPC_QUEUE=amqp://guest:guest@rpc_queue:5672/
+
 
 # warehouse
 storage_warehouse:
@@ -60,11 +62,11 @@ storage_warehouse:
 
 service_warehouse:
   image: navi7/harpc
-  ports:
-    - "8083:8081"
   links:
     - "rpc_queue"
     - "storage_warehouse"
   labels:
     - "description=Warehouse stuff"
-  command: "/harpc/services/start_service.sh warehouse rpc_queue 5672"
+  command: "/harpc/start_service.sh warehouse rpc_queue 5672"
+  environment:
+    - RPC_QUEUE=amqp://guest:guest@rpc_queue:5672/
