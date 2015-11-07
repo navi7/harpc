@@ -25,6 +25,8 @@ service_account:
   command: "/harpc/start_service.sh account rpc_queue 5672"
   environment:
     - RPC_QUEUE=amqp://guest:guest@rpc_queue:5672/
+  volumes:
+     - ./harpc:/harpc
 
 
 # products
@@ -68,5 +70,8 @@ service_warehouse:
   labels:
     - "description=Warehouse stuff"
   command: "/harpc/start_service.sh warehouse rpc_queue 5672"
+#  command: "tail -f /dev/null"
   environment:
     - RPC_QUEUE=amqp://guest:guest@rpc_queue:5672/
+  volumes:
+     - ./harpc:/harpc
