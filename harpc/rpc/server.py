@@ -65,6 +65,9 @@ class HARPCServer(QueueClient):
         function_name = self.extract_function_name(message.delivery_info['routing_key'])
         try:
             record = self.registry.get(function_name)
+            if record is None:
+                raise Exception('No procedure with name "{}" found here'.format(function_name))
+
             bound = record.signature.bind(*{}, **payload)
             logging.info('Running {}({})'.format(function_name, payload))
             response = await record.function(*{}, **bound.arguments)
